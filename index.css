@@ -1,0 +1,277 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700);
+$green: #86BB71;
+$blue: #94C2ED;
+$orange: #E38968;
+$gray: #92959E;
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+body {
+  background: #C5DDEB;
+  font: 14px/20px "Lato", Arial, sans-serif;
+  padding: 20px 0;
+  padding-top: 0px;
+  color: white;
+}
+
+#camblock {
+  display: inline-block;
+  background: #C5DDEB;
+  border: 5px solid rgb(3, 187, 197);
+  border-radius: 7px;
+  margin-right: 10px;
+  color: white;
+}
+
+#switches {
+  display: inline-block;
+  background: #C5DDEB;
+  font: 30px/20px "Lato", Arial, sans-serif;
+  padding: 23px 0;
+  color: rgba(17, 214, 81, 0.81);
+}
+
+#climateblock {
+  display: inline-block;
+  background: #C5DDEB;
+  font: 30px/20px "Lato", Arial, sans-serif;
+  padding: 15px 0;
+  color: rgba(17, 214, 81, 0.81);
+}
+
+#Temperature {
+  display: inline-block;
+  background: #C5DDEB;
+  font: 30px/20px "Lato", Arial, sans-serif;
+  margin-right: 10px;
+  color: rgba(17, 214, 81, 0.81);
+}
+
+#Humidity {
+  display: inline-block;
+  background: #C5DDEB;
+  font: 30px/20px "Lato", Arial, sans-serif;
+  margin-right: 10px;
+  color: rgba(17, 214, 81, 0.81);
+}
+
+#message_block {
+  display : inline-block;
+  background: #F2F5F8;
+  color: #434651;
+  position: absolute;
+  width: 420px;
+  margin-left: 15px;
+  margin-bottom: 25px;
+}
+
+#onlinelist {
+  position: fixed;
+  border-top-right-radius: 5px;
+  color: #434651;
+  background: rgba(31, 251, 144, 0.7);
+  top: 19px;
+  right: 29px;
+  width: 250px;
+  visibility: hidden;
+}
+
+#onlinelist h2 {
+    padding-left: 20px;
+    padding-bottom: 16.5px;
+    border-bottom: 2px solid gray;
+}
+
+#onlinelist ul {
+    padding-left: 23px;
+}
+
+#onlinelist li {
+    list-style-type: none;
+    font-size: 18px;
+}
+
+#message_header {
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top: 0.8px solid gray;
+    border-left: 0.8px solid gray;
+    border-right: 0.8px solid gray;
+    border-bottom: 2px solid gray;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+#message_header h2 {
+    padding-left: 10px;
+}
+
+#message_history {
+  border-left: 0.8px solid gray;
+  border-right: 0.8px solid gray;
+  border-bottom: 2px solid gray;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 510px;
+  width: 100%;
+}
+
+#messages {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+#message_type {
+    width: 100%;
+    padding: 0px;
+}
+
+.message {
+    padding: 10px;
+}
+
+.my_message {
+    color: white;
+    padding: 18px 20px;
+    line-height: 26px;
+    font-size: 16px;
+    border-radius: 7px;
+    margin-bottom: 5px;
+    width: auto;
+    max-width: 20%;
+    position: relative;
+    left: 70%;
+    background: #86BB71;
+}
+
+.other_message {
+    color: white;
+    padding: 18px 20px;
+    line-height: 26px;
+    font-size: 16px;
+    border-radius: 7px;
+    margin-bottom: 5px;
+    width: auto;
+    max-width: 20%;
+    position: relative;
+    left: 2.5%;
+    background: #94C2ED;
+}
+
+.my_says {
+    color: black;
+    padding: 3px;
+    line-height: 18px;
+    font-size: 14px;
+    margin-bottom: 5px;
+    width: auto;
+    position: relative;
+    left: 70%;
+}
+
+.other_says {
+    color: black;
+    padding: 3px;
+    line-height: 18px;
+    font-size: 14px;
+    margin-bottom: 5px;
+    width: auto;
+    position: relative;
+    left: 2.5%;
+}
+
+form {
+    background: #C5DDEB;
+    padding: 0px;
+    position: relative;
+    border: 1px solid gray;
+    border-top: none;
+    border-bottom: 1px solid gray;
+    top: 0;
+    width: 100%;
+    height: 40px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+form input {
+    border: 0;
+    padding: 13px;
+    width: 80%;
+    padding-right: 0px;
+}
+
+form button {
+    position: absolute;
+    width: 18%;
+    background: #E38968;
+    border: none;
+    padding: 13px;
+    border: none;
+    padding-left: 0px;
+    padding-right: 0px;
+    overflow-x: hidden;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  top: 5px;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

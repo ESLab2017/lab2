@@ -1,0 +1,25 @@
+{
+  "name": "lite",
+  "version": "0.0.0",
+  "description": "Tessel project",
+  "main": "server.js",
+  "dependencies": {
+    "assert": "^1.4.1",
+    "climate-si7020": "^0.1.1",
+    "express": "^4.15.2",
+    "mongodb": "^2.2.24",
+    "mysql": "^2.13.0",
+    "socket.io": "^1.7.3",
+    "tessel-av": "^0.16.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "www.github.com/tessel/t2-cli",
+  "keywords": [
+    "Tessel"
+  ],
+  "license": "MIT",
+  "readme": "A bare bones Tessel 2 blinky script."
+}

@@ -1,0 +1,225 @@
+<!doctype html>
+<html>
+<head>
+    <title>Smart furniture</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" type="text/css" href="tooltipster.bundle.min.css" />
+</head>
+
+<body id="body">
+    <div id="switches">
+      <label for="flip-1">LED開關</label>
+      <label class="switch">
+        <input id="ledswitch" type="checkbox">
+        <div class="slider round"></div>
+      </label>
+      <label for="flip-2">攝影機開關</label>
+      <label class="switch">
+        <input id="cameraswitch" type="checkbox" checked>
+        <div class="slider round"></div>
+      </label>
+      <div id="Temperature"> 溫度： 26.5度C </div>
+      <div id="Humidity"> 濕度： 61.5%RH </div>
+    </div>
+
+    <div id="camblock">
+      <img id="camstream" src="/stream">
+    </div>
+
+    <div id="message_block">
+        <section id="message_header">
+            <h2>Message area</h2>
+        </section>
+        <section id="message_history">
+            <div id="messages"></div>
+        </section>
+        <section id="message_type">
+            <form id="textbox">
+                <input id="m" autocomplete="off" />
+                <button>Send</button>
+            </form>
+        </section>
+    </div>
+
+    <div id="onlinelist">
+        <h2 id="members">online list</h2>
+        <ul id="userlist"></ul>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="tooltipster.bundle.min.js"></script>
+    <script>
+        $(function() { //for client
+            var socket = io();
+            var name;
+            const pri_chatlist = [];
+            login();
+            climateon();
+            readLed();
+
+            $('#textbox').submit(function() {
+                if ($('#m').val() != '') {
+                    socket.emit('chat message', $('#m').val()); //display message
+                    $('#m').val(''); // clean input
+                }
+                return false;
+            });
+
+            setInterval(function() {
+                climateon();
+            }, 30000); //update every 30 sec
+
+            $('#ledswitch').click(function() {
+                socket.emit("led switch");
+            });
+
+            $('#cameraswitch').click(function() {
+              var cs = document.getElementById('cameraswitch');
+              if (cs.checked) {
+                  var camblock = document.getElementById("camblock");
+                  var msgblock = document.getElementById("message_block");
+                  camblock.innerHTML = '<img id="camstream" src="/stream">';
+                  camblock.style.display = 'inline-block';
+                  msgblock.style.display = 'inline-block';
+              } else {
+                  var camblock = document.getElementById("camblock");
+                  var msgblock = document.getElementById("message_block");
+                  camblock.innerHTML = '';
+                  camblock.style.display = 'none';
+                  msgblock.style.display = 'block';
+              }
+            });
+
+            socket.on('set led', function(data) {
+              var ledswitch = document.getElementById("ledswitch");
+              console.log(data.isOn);
+              ledswitch.checked = data.isOn;
+            });
+
+            socket.on('update climate', function(data) {
+              var temp = document.getElementById('Temperature');
+              var humid = document.getElementById('Humidity');
+              var degree = ((data.Degree-32)*(5/9)).toFixed(1);
+              var rh = data.Humidity;
+              temp.innerHTML = "溫度： " + degree + "度C";
+              humid.innerHTML = "濕度： " + rh + "%RH";
+            });
+
+            socket.on('relogin', function() {
+                alert("此帳號已從別處登入，請用其他帳號重新登入！");
+                login();
+            });
+
+            socket.on('wrong password', function() {
+                alert("密碼錯誤，請重新登入！");
+                login();
+            });
+
+            socket.on('chat message', function(data) {
+                AppendMessage(data);
+            });
+
+            socket.on('add record', function(data) {
+                AppendMessage(data);
+            });
+
+            socket.on('set guestnum', function(num) {
+                if (num != 1)
+                    name += num;
+            });
+
+            socket.on('update userlist', function(userlist) {
+                updateuserlist(userlist);
+            });
+
+            socket.on('add user', function(data) {
+                appendnotice(data.username + "已加入");
+            });
+
+            socket.on('user left', function(data) {
+                appendnotice(data.username + "已離開");
+            });
+
+            function appendnotice(msg) {
+                var newdiv = $('<div class="message"></div>').text(msg);
+                $('#messages').append(newdiv);
+
+                var his = document.getElementById("message_history");
+                his.scrollTop = his.scrollHeight;
+            }
+
+            function AppendMessage(data) {
+                if (data.u_name == name) {
+                    var newdiv = $('<div class="tooltip my_message"></div>')
+                        .prop("title", data.u_time)
+                        .text(data.u_word);
+                    var msg = data.u_name + ":";
+                    var whosays = $('<div class="my_says"></div>').text(msg);
+                } else {
+                    var newdiv = $('<div class="tooltip other_message"></div>')
+                        .prop("title", data.u_time)
+                        .text(data.u_word);
+                    var msg = data.u_name + ":";
+                    var whosays = $('<div class="other_says"></div>').text(msg);
+                }
+                $('#messages').append(whosays);
+                $('#messages').append(newdiv);
+                $('.tooltip').tooltipster();
+
+                var his = document.getElementById("message_history");
+                his.scrollTop = his.scrollHeight;
+            }
+
+            function login() {
+                name = prompt("請輸入帳號（或輸入guest以訪客登入）\n第一次登入的帳密會自動註冊", "guest");
+                if (name == "" || name == null || name == "guest") {
+                    name = "guest";
+                    socket.emit("guest login");
+                }
+                if (name != "guest") {
+                    var password = prompt("請輸入密碼", "");
+
+                    while (password === "" || password === null) {
+                        password = prompt("no password!!!", "");
+                    }
+
+                    socket.emit("user login", {
+                        username: name,
+                        userpassword: password //profile
+                    });
+                }
+            };
+
+            function climateon() {
+                socket.emit("climate on", {});
+            };
+
+            function readLed() {
+                socket.emit("read led");
+            };
+
+            function updateuserlist(userlist) {
+                const list = document.getElementById('userlist');
+                list.innerHTML = '';
+
+                for (let i = 0; i < userlist.length; i += 1) {
+                    const item = document.createElement('li');
+                    if (userlist[i] === name) {
+                        item.innerHTML = userlist[i] + "(You)";
+                    } else {
+                        item.innerHTML = userlist[i];
+                    }
+                    item.addEventListener('mouseenter', function() {
+                        item.style.color = "red";
+                    });
+                    item.addEventListener('mouseleave', function() {
+                        item.style.color = "black";
+                    });
+                }
+            };
+        });
+    </script>
+</body>
+
+</html>
